@@ -1,5 +1,5 @@
 import { products } from '../../data/products'
-import { useState } from 'react'
+import { useState, type ChangeEvent } from 'react'
 import Modal from '../../components/ui/Modal'
 import type { Product } from '../../data/products'
 
@@ -33,6 +33,19 @@ export default function AdminProducts() {
 
   const closeEditor = () => {
     setEditing(null)
+  }
+
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setForm((prev) => ({ ...prev, image: reader.result as string }))
+      }
+    }
+    reader.readAsDataURL(file)
   }
 
   const handleSave = () => {
@@ -177,15 +190,33 @@ export default function AdminProducts() {
               />
             </label>
             <label className="block text-sm">
-              <span className="mb-2 block text-cream">Image URL</span>
+              <span className="mb-2 block text-cream">Image</span>
               <input
-                type="text"
-                value={form.image}
-                onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
-                className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-cream outline-none transition focus:border-gold-primary"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-cream outline-none transition file:cursor-pointer file:rounded-full file:border-0 file:bg-gold-primary file:px-3 file:py-2 file:text-sm file:font-semibold file:text-bg-main"
               />
+              <p className="mt-2 text-xs text-cream-muted">Upload an image or paste a valid image URL below.</p>
             </label>
           </div>
+
+          <label className="block text-sm">
+            <span className="mb-2 block text-cream">Image URL or uploaded preview</span>
+            <input
+              type="text"
+              value={form.image}
+              onChange={(e) => setForm((prev) => ({ ...prev, image: e.target.value }))}
+              className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-cream outline-none transition focus:border-gold-primary"
+            />
+          </label>
+
+          {form.image && (
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+              <p className="mb-3 text-sm text-cream">Selected image preview</p>
+              <img src={form.image} alt="Selected product" className="h-48 w-full rounded-3xl object-cover" />
+            </div>
+          )}
 
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
             <button
