@@ -11,6 +11,7 @@ import AdminLogin from './pages/admin/Login'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminOrders from './pages/admin/Orders'
 import AdminProducts from './pages/admin/Products'
+import AdminNotifications from './pages/admin/Notifications'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
       <Route path="/admin/login" element={<AdminLogin />} />
 
       <Route path="/admin" element={<AdminLayout><AdminDashboard /></AdminLayout>} />
+      <Route path="/admin/notifications" element={<AdminLayout><AdminNotifications /></AdminLayout>} />
       <Route path="/admin/orders" element={<AdminLayout><AdminOrders /></AdminLayout>} />
       <Route path="/admin/products" element={<AdminLayout><AdminProducts /></AdminLayout>} />
 

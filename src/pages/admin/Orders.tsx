@@ -1,57 +1,5 @@
 import { useState } from 'react'
-
-const mockOrders = [
-  {
-    id: 'KB-A9X2M1',
-    customer: 'Maria Santos',
-    contact: '0966 364 0516',
-    items: ['Black Ivory', 'House Espresso'],
-    amount: 680,
-    status: 'Ready' as const,
-    date: '2026-05-16',
-    paymentMethod: 'Cash',
-  },
-  {
-    id: 'KB-F3K8L2',
-    customer: 'Juan Dela Cruz',
-    contact: 'juan@email.com',
-    items: ['Kopi Luwak'],
-    amount: 540,
-    status: 'Preparing' as const,
-    date: '2026-05-16',
-    paymentMethod: 'GCash',
-  },
-  {
-    id: 'KB-R7P5V9',
-    customer: 'Rosa Garcia',
-    contact: '0917 555 2841',
-    items: ['Panama Geisha', 'Gold Cold Brew'],
-    amount: 360,
-    status: 'Confirmed' as const,
-    date: '2026-05-15',
-    paymentMethod: 'Card',
-  },
-  {
-    id: 'KB-Q2W8T4',
-    customer: 'Michael Lee',
-    contact: 'michael.lee@work.com',
-    items: ['Blue Mountain'],
-    amount: 280,
-    status: 'Ready' as const,
-    date: '2026-05-15',
-    paymentMethod: 'Cash',
-  },
-  {
-    id: 'KB-Z5L9M3',
-    customer: 'Ana Rodriguez',
-    contact: '0908 777 1234',
-    items: ['Ethiopian Geisha', 'House Espresso'],
-    amount: 320,
-    status: 'Confirmed' as const,
-    date: '2026-05-14',
-    paymentMethod: 'GCash',
-  },
-]
+import { adminOrders, type AdminOrder } from '../../data/admin'
 
 const statusColors = {
   Ready: 'bg-gold-primary/10 text-gold-primary',
@@ -60,7 +8,7 @@ const statusColors = {
 }
 
 export default function AdminOrders() {
-  const [selectedOrder, setSelectedOrder] = useState<typeof mockOrders[0] | null>(null)
+  const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(adminOrders[0] ?? null)
 
   return (
     <div className="space-y-8">
@@ -71,7 +19,7 @@ export default function AdminOrders() {
 
       <div className="surface-glow rounded-[2rem] border border-white/10 bg-bg-surface/90 p-8 shadow-soft">
         <div className="space-y-6">
-          {mockOrders.map((order) => (
+          {adminOrders.map((order) => (
             <button
               key={order.id}
               type="button"

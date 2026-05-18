@@ -43,7 +43,7 @@ export default function AdminLogin() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="jireh"
+              placeholder="Enter your username"
               required
               className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-cream outline-none transition focus:border-gold-primary"
             />
@@ -54,7 +54,7 @@ export default function AdminLogin() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder="Enter your password"
               required
               className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-cream outline-none transition focus:border-gold-primary"
             />

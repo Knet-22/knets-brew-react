@@ -1,6 +1,10 @@
 import { products } from '../../data/products'
+import { getNotifications } from '../../data/admin'
+import { useAuth } from '../../context/AuthContext'
 
 export default function AdminDashboard() {
+  const { user } = useAuth()
+  const notifications = getNotifications(user?.role ?? 'admin')
   const totalProducts = products.length
   const totalOrders = 47
   const totalRevenue = 48320
@@ -81,6 +85,29 @@ export default function AdminDashboard() {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      <div className="surface-glow rounded-[2rem] border border-white/10 bg-bg-surface/90 p-8 shadow-soft">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.35em] text-cream-muted">Notifications</p>
+            <h2 className="mt-2 text-2xl font-semibold text-cream">Latest alerts</h2>
+          </div>
+          <span className="rounded-full bg-gold-primary/10 px-3 py-1 text-sm font-semibold text-gold-primary">
+            {notifications.length} new
+          </span>
+        </div>
+        <div className="mt-6 space-y-4">
+          {notifications.map((notification) => (
+            <div key={notification.id} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sm font-semibold text-cream">{notification.title}</p>
+                <span className="text-[0.65rem] uppercase tracking-[0.3em] text-cream-muted">{notification.date}</span>
+              </div>
+              <p className="mt-2 text-sm leading-6 text-cream-muted">{notification.description}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
