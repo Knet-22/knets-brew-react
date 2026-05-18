@@ -25,7 +25,7 @@ export default function Footer() {
           <p className="text-xs uppercase tracking-[0.35em] text-cream-muted">Explore</p>
           <div className="flex flex-col gap-3 text-sm">
             <Link to="/menu" className="transition hover:text-gold-primary">Menu</Link>
-            <Link to="/order" className="transition hover:text-gold-primary">Reserve a cup</Link>
+            <Link to="/order" className="transition hover:text-gold-primary">Order a cup</Link>
             <Link to="/track" className="transition hover:text-gold-primary">Track a brew</Link>
           </div>
         </div>

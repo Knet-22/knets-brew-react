@@ -33,7 +33,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             to="/order"
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm uppercase tracking-[0.25em] text-cream transition hover:border-gold-primary hover:text-gold-primary"
           >
-            Reserve now
+            View cart
           </Link>
           <button
             type="button"

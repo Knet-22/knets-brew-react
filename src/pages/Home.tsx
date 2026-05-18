@@ -24,7 +24,7 @@ export default function Home() {
                 Explore menu
               </Link>
               <Link to="/order" className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-7 py-4 text-sm uppercase tracking-[0.28em] text-cream transition hover:border-gold-primary hover:text-gold-primary">
-                Reserve your cup
+                View cart
               </Link>
             </div>
           </div>
@@ -45,7 +45,7 @@ export default function Home() {
       <section className="grid gap-16 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-10">
           <SectionHeading
-            eyebrow="Signature Reserve"
+            eyebrow="Signature Selection"
             title="Experience rare coffee that feels as crafted as jewelry."
             description="We bring premium beans from iconic origins, then serve them in an intimate dark-luxe atmosphere designed for quiet indulgence."
           />
@@ -89,7 +89,7 @@ export default function Home() {
               <span className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-3xl bg-gold-primary/10 text-gold-primary">03</span>
               <div>
                 <strong className="block text-cream">Fast online ordering</strong>
-                Reserve your coffee ahead, then arrive with your order ready in minutes.
+                Order your coffee ahead, then arrive with your order ready in minutes.
               </div>
             </li>
           </ul>
@@ -100,7 +100,7 @@ export default function Home() {
         <SectionHeading
           eyebrow="Featured Collection"
           title="Select from our curated rare roast menu."
-          description="These premium classics and signature offerings are ready to be reserved for your next visit."
+          description="These premium classics and signature offerings are ready to be ordered for your next visit."
         />
         <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
           {featured.map((product) => (

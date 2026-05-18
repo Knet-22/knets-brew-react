@@ -28,7 +28,7 @@ export default function Order() {
       <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="surface-glow rounded-[3rem] border border-white/10 bg-bg-surface/90 p-10 shadow-soft">
           <SectionHeading
-            eyebrow="Reserve"
+            eyebrow="Order"
             title="Complete your order and lock in your premium coffee pickup."
             description="Review your selection, choose a pick up method, and confirm a luxurious coffee experience in Calape."
           />
@@ -77,7 +77,7 @@ export default function Order() {
             ) : (
               <div className="rounded-[2rem] border border-dashed border-white/10 bg-white/5 p-12 text-center text-cream-muted">
                 <p className="text-lg font-semibold text-cream">Your cart is empty.</p>
-                <p className="mt-3 text-sm leading-7">Discover our rare coffee selection and reserve a cup for pickup.</p>
+                <p className="mt-3 text-sm leading-7">Discover our rare coffee selection and add a cup for pickup.</p>
               </div>
             )}
           </div>
@@ -149,7 +149,7 @@ export default function Order() {
         </aside>
       </section>
 
-      <Modal open={checkoutOpen} title="Confirm reservation" onClose={() => setCheckoutOpen(false)}>
+      <Modal open={checkoutOpen} title="Confirm order" onClose={() => setCheckoutOpen(false)}>
         <div className="space-y-6">
           <div className="rounded-[2rem] border border-white/10 bg-bg-main/90 p-5 text-sm text-cream-muted">
             <p className="font-semibold text-cream">Pickup by</p>
@@ -185,7 +185,7 @@ export default function Order() {
               onClick={handleCheckout}
               className="inline-flex min-w-[160px] items-center justify-center rounded-full bg-gold-primary px-5 py-3 text-sm font-semibold uppercase tracking-[0.24em] text-bg-main transition hover:bg-gold-light"
             >
-              Confirm reservation
+              Confirm order
             </button>
           </div>
         </div>
