@@ -12,10 +12,22 @@ export default function Order() {
   const [pickupName, setPickupName] = useState('')
   const [contact, setContact] = useState('')
   const [payment, setPayment] = useState('Cash')
+  const [orderType, setOrderType] = useState<'dine-in' | 'pickup' | 'delivery'>('pickup')
+  const [address, setAddress] = useState('')
 
   const hasItems = items.length > 0
   const total = subtotal
-  const canCheckout = hasItems && pickupName.trim().length > 0 && contact.trim().length > 0
+  const canCheckout =
+    hasItems &&
+    pickupName.trim().length > 0 &&
+    contact.trim().length > 0 &&
+    (orderType !== 'delivery' || address.trim().length > 0)
+
+  const ORDER_TYPES = [
+    { value: 'dine-in', label: 'Dine-in', sub: 'Visit us at the café', icon: 'fa-utensils' },
+    { value: 'pickup', label: 'Pickup', sub: 'Order ahead, collect at counter', icon: 'fa-bag-shopping' },
+    { value: 'delivery', label: 'Delivery', sub: 'Delivered to your address', icon: 'fa-motorcycle' },
+  ] as const
 
   const handleCheckout = () => {
     if (!canCheckout) return
@@ -135,9 +147,45 @@ export default function Order() {
             </div>
           </div>
 
-          {/* Pickup details */}
+          {/* Order type */}
           <div className="surface-glow rounded-[2.5rem] border border-white/10 bg-bg-surface/90 p-6 shadow-soft sm:p-8">
-            <p className="text-xs uppercase tracking-[0.35em] text-cream/40">Pickup details</p>
+            <p className="text-xs uppercase tracking-[0.35em] text-cream/40">Order type</p>
+            <div className="mt-4 space-y-2">
+              {ORDER_TYPES.map((type) => (
+                <button
+                  key={type.value}
+                  type="button"
+                  onClick={() => setOrderType(type.value)}
+                  className={`flex w-full items-center gap-4 rounded-2xl border px-4 py-3 text-left transition ${
+                    orderType === type.value
+                      ? 'border-gold-primary bg-gold-primary/10'
+                      : 'border-white/10 bg-white/5 hover:border-gold-primary/40'
+                  }`}
+                >
+                  <span className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border ${
+                    orderType === type.value
+                      ? 'border-gold-primary bg-gold-primary/20 text-gold-primary'
+                      : 'border-white/10 bg-white/5 text-cream/40'
+                  }`}>
+                    <i className={`fa-solid ${type.icon} text-xs`} />
+                  </span>
+                  <div className="flex-1">
+                    <p className={`text-sm font-semibold ${orderType === type.value ? 'text-gold-primary' : 'text-cream'}`}>
+                      {type.label}
+                    </p>
+                    <p className="text-xs text-cream/50">{type.sub}</p>
+                  </div>
+                  {orderType === type.value && (
+                    <i className="fa-solid fa-circle-check text-gold-primary" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Customer details */}
+          <div className="surface-glow rounded-[2.5rem] border border-white/10 bg-bg-surface/90 p-6 shadow-soft sm:p-8">
+            <p className="text-xs uppercase tracking-[0.35em] text-cream/40">Your details</p>
             <div className="mt-5 space-y-4">
               <label className="block text-sm">
                 <span className="mb-2 block text-cream">Name <span className="text-red-400">*</span></span>
@@ -157,6 +205,18 @@ export default function Order() {
                   placeholder="Phone or email"
                 />
               </label>
+              {orderType === 'delivery' && (
+                <label className="block text-sm">
+                  <span className="mb-2 block text-cream">Delivery address <span className="text-red-400">*</span></span>
+                  <textarea
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    rows={3}
+                    className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-cream outline-none transition focus:border-gold-primary resize-none"
+                    placeholder="Street, barangay, city"
+                  />
+                </label>
+              )}
               <label className="block text-sm">
                 <span className="mb-2 block text-cream">Payment</span>
                 <select
@@ -191,9 +251,22 @@ export default function Order() {
       <Modal open={checkoutOpen} title="Confirm order" onClose={() => setCheckoutOpen(false)}>
         <div className="space-y-6">
           <div className="rounded-[1.75rem] border border-white/10 bg-bg-main/90 p-5 text-sm text-cream/60">
-            <p className="font-semibold text-cream">Pickup by</p>
-            <p>{pickupName || 'Guest'}</p>
+            <div className="mb-3 flex items-center gap-2">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-gold-primary/10 text-gold-primary">
+                <i className={`fa-solid ${ORDER_TYPES.find((t) => t.value === orderType)?.icon} text-xs`} />
+              </span>
+              <span className="font-semibold capitalize text-cream">
+                {ORDER_TYPES.find((t) => t.value === orderType)?.label}
+              </span>
+            </div>
+            <p className="font-semibold text-cream">{pickupName || 'Guest'}</p>
             <p>{contact || 'No contact provided'}</p>
+            {orderType === 'delivery' && address && (
+              <p className="mt-1 flex items-start gap-1.5">
+                <i className="fa-solid fa-location-dot mt-0.5 shrink-0 text-gold-primary/60" />
+                {address}
+              </p>
+            )}
             <p className="mt-3 flex items-center gap-2">
               <i className="fa-solid fa-credit-card text-gold-primary/60" />
               Payment: {payment}

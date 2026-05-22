@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import type { Product } from '../data/products'
 import { CATEGORY_GRADIENTS, CATEGORY_ICONS } from '../data/products'
 import { formatCurrency } from '../lib/format'
@@ -22,6 +22,19 @@ function ProductImagePlaceholder({ category }: { category: string }) {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart()
+  const [added, setAdded] = useState(false)
+
+  const handleAddToCart = () => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      category: product.category,
+      price: product.price,
+      image: product.image,
+    })
+    setAdded(true)
+    setTimeout(() => setAdded(false), 1500)
+  }
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-bg-surface/90 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-gold-primary/30 hover:shadow-glow">
@@ -68,28 +81,28 @@ export default function ProductCard({ product }: ProductCardProps) {
           <p className="mt-2 text-sm leading-6 text-cream/60">{product.description}</p>
         </div>
 
-        <div className="mt-auto flex items-center gap-3 pt-2">
-          <Link
-            to="/order"
-            className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm uppercase tracking-[0.2em] text-cream transition hover:border-gold-primary hover:text-gold-primary"
-          >
-            <i className="fa-solid fa-bag-shopping text-xs" />
-            Cart
-          </Link>
+        <div className="mt-auto pt-2">
           <button
             type="button"
             disabled={product.stock === 0}
-            onClick={() => addItem({
-              id: product.id,
-              name: product.name,
-              category: product.category,
-              price: product.price,
-              image: product.image,
-            })}
-            className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gold-primary px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.2em] text-bg-main transition hover:bg-gold-light disabled:cursor-not-allowed disabled:opacity-40"
+            onClick={handleAddToCart}
+            className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.2em] transition disabled:cursor-not-allowed disabled:opacity-40 ${
+              added
+                ? 'bg-green-500/20 border border-green-500/40 text-green-400'
+                : 'bg-gold-primary text-bg-main hover:bg-gold-light'
+            }`}
           >
-            <i className="fa-solid fa-plus text-xs" />
-            Add
+            {added ? (
+              <>
+                <i className="fa-solid fa-check text-xs" />
+                Added to cart
+              </>
+            ) : (
+              <>
+                <i className="fa-solid fa-bag-shopping text-xs" />
+                Add to cart
+              </>
+            )}
           </button>
         </div>
       </div>
