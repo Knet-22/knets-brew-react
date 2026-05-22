@@ -50,7 +50,7 @@ export default function Footer() {
                 { label: 'Menu', to: '/menu' },
                 { label: 'Order a cup', to: '/order' },
                 { label: 'Track a brew', to: '/track' },
-                { label: 'Staff portal', to: '/admin/login' },
+                { label: "Knet's Brew Dashboard", to: '/admin/login' },
               ].map(({ label, to }) => (
                 <Link key={to} to={to} className="text-cream/55 transition hover:text-gold-primary">
                   {label}

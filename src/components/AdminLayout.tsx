@@ -9,7 +9,7 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  const { user, logout } = useAuth()
+  const { user, logout, loading } = useAuth()
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
@@ -33,6 +33,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     }
   }, [user?.username])
 
+  // Wait for auth to resolve before deciding to redirect
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-bg-main">
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-white/10 border-t-gold-primary" />
+      </div>
+    )
+  }
+
   if (!user) {
     return <Navigate to="/admin/login" replace />
   }
@@ -52,11 +61,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   const navLinks = [
-    { label: 'Dashboard', to: '/admin', icon: 'fa-chart-line' },
-    { label: 'Notifications', to: '/admin/notifications', icon: 'fa-bell' },
-    { label: 'Orders', to: '/admin/orders', icon: 'fa-receipt' },
-    { label: 'Products', to: '/admin/products', icon: 'fa-coffee' },
-  ]
+    { label: 'Dashboard', to: '/admin', icon: 'fa-chart-line', roles: ['admin', 'staff'] },
+    { label: 'Notifications', to: '/admin/notifications', icon: 'fa-bell', roles: ['admin', 'staff'] },
+    { label: 'Orders', to: '/admin/orders', icon: 'fa-receipt', roles: ['admin', 'staff'] },
+    { label: 'Products', to: '/admin/products', icon: 'fa-coffee', roles: ['admin'] },
+  ].filter((link) => link.roles.includes(user.role))
 
   return (
     <div className="flex min-h-screen bg-bg-main">
@@ -68,7 +77,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </span>
           <div>
             <p className="text-sm font-semibold text-cream">Knet's Brew</p>
-            <p className="text-xs uppercase tracking-[0.28em] text-cream-muted">Admin</p>
+            <p className="text-xs uppercase tracking-[0.28em] text-cream-muted">
+              {user.role === 'admin' ? 'Admin' : 'Staff'} Dashboard
+            </p>
           </div>
         </div>
 

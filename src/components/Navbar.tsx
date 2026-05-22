@@ -69,7 +69,7 @@ export default function Navbar() {
             className="ml-2 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm uppercase tracking-[0.2em] text-cream/60 transition hover:border-gold-primary hover:text-gold-primary"
           >
             <i className="fa-solid fa-lock text-xs" />
-            Portal
+            Dashboard
           </Link>
         </nav>
 
@@ -129,7 +129,7 @@ export default function Navbar() {
                 className="flex items-center gap-2 rounded-2xl px-4 py-3 text-sm uppercase tracking-[0.2em] text-cream/50 transition hover:bg-white/5 hover:text-gold-primary"
               >
                 <i className="fa-solid fa-lock text-xs" />
-                Staff Portal
+                Knet's Brew Dashboard
               </Link>
             </li>
           </ul>

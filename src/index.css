@@ -43,7 +43,6 @@
     background: radial-gradient(circle at top left, rgba(166, 124, 82, 0.14), transparent 28%),
       radial-gradient(circle at bottom right, rgba(196, 154, 108, 0.1), transparent 30%),
       var(--bg-main);
-    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
