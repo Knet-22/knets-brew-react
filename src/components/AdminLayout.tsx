@@ -68,9 +68,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   ].filter((link) => link.roles.includes(user.role))
 
   return (
-    <div className="flex min-h-screen bg-bg-main">
+    <div className="flex bg-bg-main">
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-white/10 bg-bg-deep/95 backdrop-blur-xl transition-transform sm:static sm:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-white/10 bg-bg-deep/95 backdrop-blur-xl transition-transform sm:sticky sm:top-0 sm:h-screen sm:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex h-20 items-center gap-3 border-b border-white/10 px-6">
           <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-gold-primary bg-white/5 text-gold-primary">
             <i className="fa-solid fa-mug-hot" />
@@ -125,7 +125,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       </aside>
 
       {/* Main */}
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-h-screen flex-1 flex-col">
         {/* Topbar */}
         <header className="relative sticky top-0 z-30 flex h-20 items-center gap-4 border-b border-white/10 bg-bg-deep/95 px-6 backdrop-blur-xl sm:justify-between">
           <button
@@ -209,7 +209,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </header>
 
         {/* Content */}
-        <main className="flex-1 overflow-auto px-6 py-8 sm:px-8">
+        <main className="px-6 py-8 sm:px-8">
           {children}
         </main>
       </div>
