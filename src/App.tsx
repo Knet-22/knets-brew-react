@@ -13,6 +13,7 @@ import AdminDashboard from './pages/admin/Dashboard'
 import AdminOrders from './pages/admin/Orders'
 import AdminProducts from './pages/admin/Products'
 import AdminNotifications from './pages/admin/Notifications'
+import AdminStaff from './pages/admin/Staff'
 import { useAuth } from './context/AuthContext'
 
 // Restricts a route to admin role only — redirects staff to dashboard
@@ -46,6 +47,16 @@ export default function App() {
           <AdminLayout>
             <AdminOnly>
               <AdminProducts />
+            </AdminOnly>
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/admin/staff"
+        element={
+          <AdminLayout>
+            <AdminOnly>
+              <AdminStaff />
             </AdminOnly>
           </AdminLayout>
         }

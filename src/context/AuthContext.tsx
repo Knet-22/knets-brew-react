@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 
 export interface AdminUser {
   id: string
@@ -7,23 +7,46 @@ export interface AdminUser {
   role: 'admin' | 'staff'
 }
 
+export interface StaffAccount {
+  id: string
+  username: string
+  name: string
+  password: string
+}
+
 interface AuthContextValue {
   user: AdminUser | null
   loading: boolean
   isAuthenticated: boolean
   login: (username: string, password: string) => Promise<boolean>
   logout: () => void
+  addStaffAccount: (account: Omit<StaffAccount, 'id'>) => void
+  removeStaffAccount: (id: string) => void
+  staffAccounts: StaffAccount[]
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
-const STORAGE_KEY = 'knets_brew_admin_session'
+const SESSION_KEY = 'knets_brew_admin_session'
+const STAFF_KEY = 'knets_brew_staff_v1'
+
+function loadStaffAccounts(): StaffAccount[] {
+  try {
+    const stored = localStorage.getItem(STAFF_KEY)
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      if (Array.isArray(parsed)) return parsed
+    }
+  } catch {}
+  return []
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AdminUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const [staffAccounts, setStaffAccounts] = useState<StaffAccount[]>(loadStaffAccounts)
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
+    const stored = localStorage.getItem(SESSION_KEY)
     if (stored) {
       try {
         const parsed = JSON.parse(stored) as Record<string, unknown>
@@ -39,33 +62,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
       } catch {
-        localStorage.removeItem(STORAGE_KEY)
+        localStorage.removeItem(SESSION_KEY)
       }
     }
     setLoading(false)
   }, [])
 
   const login = async (username: string, password: string): Promise<boolean> => {
+    // Hardcoded admin
     if (username === 'jireh' && password === 'faith') {
-      const newUser: AdminUser = {
-        id: '1',
-        username,
-        name: 'Admin',
-        role: 'admin',
-      }
+      const newUser: AdminUser = { id: '1', username, name: 'Admin', role: 'admin' }
       setUser(newUser)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser))
+      localStorage.setItem(SESSION_KEY, JSON.stringify(newUser))
       return true
     }
+    // Hardcoded default staff
     if (username === 'staff@knets.ph' && password === 'staff123') {
-      const newUser: AdminUser = {
-        id: '2',
-        username,
-        name: 'Staff',
-        role: 'staff',
-      }
+      const newUser: AdminUser = { id: '2', username, name: 'Staff', role: 'staff' }
       setUser(newUser)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser))
+      localStorage.setItem(SESSION_KEY, JSON.stringify(newUser))
+      return true
+    }
+    // Dynamic staff accounts
+    const dynamicStaff = loadStaffAccounts()
+    const found = dynamicStaff.find((s) => s.username === username && s.password === password)
+    if (found) {
+      const newUser: AdminUser = { id: found.id, username: found.username, name: found.name, role: 'staff' }
+      setUser(newUser)
+      localStorage.setItem(SESSION_KEY, JSON.stringify(newUser))
       return true
     }
     return false
@@ -73,11 +97,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem(SESSION_KEY)
+  }
+
+  const addStaffAccount = (account: Omit<StaffAccount, 'id'>) => {
+    const newAccount: StaffAccount = { ...account, id: `staff-${Date.now()}` }
+    setStaffAccounts((prev) => {
+      const updated = [...prev, newAccount]
+      localStorage.setItem(STAFF_KEY, JSON.stringify(updated))
+      return updated
+    })
+  }
+
+  const removeStaffAccount = (id: string) => {
+    setStaffAccounts((prev) => {
+      const updated = prev.filter((s) => s.id !== id)
+      localStorage.setItem(STAFF_KEY, JSON.stringify(updated))
+      return updated
+    })
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, isAuthenticated: !!user, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, isAuthenticated: !!user, login, logout, addStaffAccount, removeStaffAccount, staffAccounts }}>
       {children}
     </AuthContext.Provider>
   )

@@ -67,6 +67,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { label: 'Notifications', to: '/admin/notifications', icon: 'fa-bell', roles: ['admin', 'staff'] },
     { label: 'Orders', to: '/admin/orders', icon: 'fa-receipt', roles: ['admin', 'staff'] },
     { label: 'Products', to: '/admin/products', icon: 'fa-coffee', roles: ['admin'] },
+    { label: 'Staff', to: '/admin/staff', icon: 'fa-users', roles: ['admin'] },
   ].filter((link) => link.roles.includes(user.role))
 
   return (

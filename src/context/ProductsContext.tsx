@@ -5,8 +5,10 @@ const STORAGE_KEY = 'knets_brew_products_v2'
 
 interface ProductsContextValue {
   products: Product[]
+  addProduct: (product: Omit<Product, 'id'>) => void
   updateProduct: (id: string, updates: Partial<Product>) => void
   deleteProduct: (id: string) => void
+  toggleAvailable: (id: string) => void
 }
 
 const ProductsContext = createContext<ProductsContextValue | undefined>(undefined)
@@ -29,6 +31,11 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(products))
   }, [products])
 
+  const addProduct = (product: Omit<Product, 'id'>) => {
+    const newProduct: Product = { ...product, id: `product-${Date.now()}` }
+    setProducts((prev) => [...prev, newProduct])
+  }
+
   const updateProduct = (id: string, updates: Partial<Product>) => {
     setProducts((current) => current.map((p) => (p.id === id ? { ...p, ...updates } : p)))
   }
@@ -37,8 +44,14 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
     setProducts((current) => current.filter((p) => p.id !== id))
   }
 
+  const toggleAvailable = (id: string) => {
+    setProducts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, available: p.available === false ? true : false } : p)),
+    )
+  }
+
   return (
-    <ProductsContext.Provider value={{ products, updateProduct, deleteProduct }}>
+    <ProductsContext.Provider value={{ products, addProduct, updateProduct, deleteProduct, toggleAvailable }}>
       {children}
     </ProductsContext.Provider>
   )

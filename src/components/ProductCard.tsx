@@ -63,10 +63,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             Only {product.stock} left
           </span>
         )}
-        {product.stock === 0 && (
+        {(product.stock === 0 || product.available === false) && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <span className="rounded-full border border-white/20 bg-black/60 px-5 py-2 text-xs uppercase tracking-[0.3em] text-cream/60">
-              Sold out
+              {product.available === false ? 'Unavailable' : 'Sold out'}
             </span>
           </div>
         )}
@@ -84,7 +84,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="mt-auto pt-2">
           <button
             type="button"
-            disabled={product.stock === 0}
+            disabled={product.stock === 0 || product.available === false}
             onClick={handleAddToCart}
             className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.2em] transition disabled:cursor-not-allowed disabled:opacity-40 ${
               added

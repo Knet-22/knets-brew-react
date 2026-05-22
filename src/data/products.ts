@@ -8,6 +8,7 @@ export interface Product {
   image: string
   origin?: string
   featured?: boolean
+  available?: boolean  // undefined / true = available, false = unavailable
 }
 
 export const CAFE_NAME = "Knet's Brew"
