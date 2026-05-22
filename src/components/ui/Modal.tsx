@@ -3,11 +3,12 @@ import type { ReactNode } from 'react'
 interface ModalProps {
   open: boolean
   title: string
+  eyebrow?: string
   children: ReactNode
   onClose: () => void
 }
 
-export default function Modal({ open, title, children, onClose }: ModalProps) {
+export default function Modal({ open, title, eyebrow = 'Checkout', children, onClose }: ModalProps) {
   if (!open) return null
 
   return (
@@ -15,7 +16,7 @@ export default function Modal({ open, title, children, onClose }: ModalProps) {
       <div className="w-full max-w-2xl rounded-[2rem] border border-white/10 bg-bg-deep/95 p-6 shadow-soft backdrop-blur-xl sm:p-8">
         <div className="mb-6 flex items-center justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-cream-muted">Checkout</p>
+            <p className="text-xs uppercase tracking-[0.35em] text-cream-muted">{eyebrow}</p>
             <h2 className="text-2xl font-semibold text-cream">{title}</h2>
           </div>
           <button

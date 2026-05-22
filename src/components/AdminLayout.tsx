@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getNotifications } from '../data/admin'
 import type { ReactNode } from 'react'
@@ -15,15 +15,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [readNotifications, setReadNotifications] = useState<string[]>([])
 
-  if (!user) {
-    return null
-  }
-
-  const notifications = useMemo(() => getNotifications(user.role), [user.role])
-  const unreadNotifications = notifications.filter((notification) => !readNotifications.includes(notification.id))
-  const notificationCount = unreadNotifications.length
+  // All hooks must run before any conditional return (Rules of Hooks)
+  const notifications = useMemo(() => user ? getNotifications(user.role) : [], [user])
 
   useEffect(() => {
+    if (!user) return
     const stored = localStorage.getItem(`knets_brew_notifications_${user.username}`)
     if (stored) {
       try {
@@ -35,7 +31,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         localStorage.removeItem(`knets_brew_notifications_${user.username}`)
       }
     }
-  }, [user.username])
+  }, [user?.username])
+
+  if (!user) {
+    return <Navigate to="/admin/login" replace />
+  }
+
+  const unreadNotifications = notifications.filter((notification) => !readNotifications.includes(notification.id))
+  const notificationCount = unreadNotifications.length
 
   const markAllRead = () => {
     const ids = notifications.map((notification) => notification.id)

@@ -1,14 +1,18 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 export default function AdminLogin() {
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, isAuthenticated } = useAuth()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (isAuthenticated) navigate('/admin', { replace: true })
+  }, [isAuthenticated, navigate])
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -69,7 +73,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-2xl bg-gold-primary px-4 py-3 text-sm font-semibold uppercase tracking-[0.24em] text-bg-main transition hover:bg-gold-light disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-2xl bg-gold-light px-4 py-3 text-sm font-semibold uppercase tracking-[0.24em] text-bg-main shadow-[0_0_24px_rgba(196,154,108,0.4)] transition hover:bg-gold-primary disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
