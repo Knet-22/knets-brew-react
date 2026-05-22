@@ -6,7 +6,7 @@ import { useProducts } from '../context/ProductsContext'
 
 export default function Home() {
   const { products } = useProducts()
-  const featured = products.filter((p) => p.featured).slice(0, 3)
+  const featured = products.filter((p) => p.featured).slice(0, 4)
 
   return (
     <div className="space-y-24 sm:space-y-32">
@@ -56,19 +56,16 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Featured cards (desktop only) */}
-          <div className="hidden grid-cols-1 gap-4 lg:grid lg:max-w-xs">
-            {featured.slice(0, 2).map((product) => (
-              <div
-                key={product.id}
-                className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-bg-surface/90 p-5 shadow-soft"
-              >
-                <p className="text-[0.65rem] uppercase tracking-[0.35em] text-cream/40">{product.category}</p>
-                <h2 className="mt-3 text-xl font-semibold text-cream">{product.name}</h2>
-                <p className="mt-2 text-sm leading-6 text-cream/55">{product.description}</p>
-                <span className="mt-4 inline-flex rounded-full bg-gold-primary/10 px-4 py-1.5 text-sm font-semibold text-gold-primary">
-                  ₱{product.price}
-                </span>
+          {/* Stats strip (desktop only) */}
+          <div className="hidden flex-col gap-5 lg:flex lg:items-end lg:text-right">
+            {[
+              { value: '14+', label: 'Menu items' },
+              { value: '5', label: 'Origins worldwide' },
+              { value: '100%', label: 'Rare & specialty' },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <p className="text-4xl font-semibold text-gold-primary">{stat.value}</p>
+                <p className="mt-1 text-xs uppercase tracking-[0.35em] text-cream/40">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -144,7 +141,7 @@ export default function Home() {
             <i className="fa-solid fa-arrow-right text-xs" />
           </Link>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
           {featured.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

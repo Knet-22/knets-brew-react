@@ -73,6 +73,7 @@ export const products: Product[] = [
     stock: 10,
     image: '/blue.jpg',
     origin: 'Jamaica',
+    featured: true,
   },
 
   // ── Espresso Collection ────────────────────────────────────────────────────
