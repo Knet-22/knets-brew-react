@@ -11,6 +11,8 @@ export interface AdminOrder {
   status: OrderStatus
   date: string
   paymentMethod: string
+  orderType?: 'dine-in' | 'pickup' | 'delivery'
+  address?: string
 }
 
 export const adminOrders: AdminOrder[] = [
@@ -90,8 +92,8 @@ const formatOrderNotification = (order: AdminOrder): NotificationItem => ({
   date: order.date,
 })
 
-export function getNotifications(role: 'admin' | 'staff'): NotificationItem[] {
-  const orderNotifications = adminOrders.map(formatOrderNotification)
+export function getNotifications(role: 'admin' | 'staff', orders: AdminOrder[] = adminOrders): NotificationItem[] {
+  const orderNotifications = orders.map(formatOrderNotification)
   const lowStockNotifications = products
     .filter((product) => product.stock < 10)
     .map(formatLowStockNotification)

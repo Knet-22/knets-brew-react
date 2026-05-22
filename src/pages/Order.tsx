@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import Modal from '../components/ui/Modal'
 import SectionHeading from '../components/SectionHeading'
 import { useCart } from '../context/CartContext'
+import { useOrders } from '../context/OrdersContext'
 import { createOrderCode, formatCurrency } from '../lib/format'
 
 export default function Order() {
   const navigate = useNavigate()
   const { items, subtotal, updateQuantity, removeItem, clearCart } = useCart()
+  const { addOrder } = useOrders()
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [pickupName, setPickupName] = useState('')
   const [contact, setContact] = useState('')
@@ -32,6 +34,18 @@ export default function Order() {
   const handleCheckout = () => {
     if (!canCheckout) return
     const code = createOrderCode()
+    addOrder({
+      id: code,
+      customer: pickupName.trim(),
+      contact: contact.trim(),
+      items: items.map((i) => i.quantity > 1 ? `${i.quantity}× ${i.name}` : i.name),
+      amount: total,
+      status: 'Confirmed',
+      date: new Date().toISOString().split('T')[0],
+      paymentMethod: payment,
+      orderType,
+      address: orderType === 'delivery' ? address.trim() : undefined,
+    })
     clearCart()
     navigate(`/order-success/${code}`)
   }

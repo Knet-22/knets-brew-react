@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
-import { getNotifications, adminOrders, type OrderStatus } from '../../data/admin'
+import { getNotifications, type OrderStatus } from '../../data/admin'
 import { useAuth } from '../../context/AuthContext'
 import { useProducts } from '../../context/ProductsContext'
+import { useOrders } from '../../context/OrdersContext'
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
   Confirmed: 'bg-white/10 text-cream/70',
@@ -12,12 +13,13 @@ const STATUS_STYLES: Record<OrderStatus, string> = {
 export default function AdminDashboard() {
   const { user } = useAuth()
   const { products } = useProducts()
-  const notifications = getNotifications(user?.role ?? 'staff')
+  const { orders } = useOrders()
+  const notifications = getNotifications(user?.role ?? 'staff', orders)
   const isAdmin = user?.role === 'admin'
 
-  const totalOrders = adminOrders.length + 42
-  const totalRevenue = adminOrders.reduce((sum, o) => sum + o.amount, 0) + 46000
-  const pendingOrders = adminOrders.filter((o) => o.status !== 'Ready').length
+  const totalOrders = orders.length
+  const totalRevenue = orders.reduce((sum, o) => sum + o.amount, 0)
+  const pendingOrders = orders.filter((o) => o.status !== 'Ready').length
   const lowStock = products.filter((p) => p.stock <= 5)
 
   return (
@@ -76,7 +78,7 @@ export default function AdminDashboard() {
                 </Link>
               </div>
               <div className="space-y-3">
-                {adminOrders.map((order) => (
+                {orders.map((order) => (
                   <div key={order.id} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4">
                     <div>
                       <p className="text-sm font-semibold text-cream">{order.id}</p>
@@ -153,8 +155,8 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {[
               { label: 'Active orders', value: pendingOrders, sub: 'Need attention', icon: 'fa-fire-burner', color: 'text-blue-400' },
-              { label: 'Ready to pickup', value: adminOrders.filter((o) => o.status === 'Ready').length, sub: 'Waiting for customer', icon: 'fa-bell', color: 'text-gold-primary' },
-              { label: "Today's orders", value: adminOrders.length, sub: 'Total received', icon: 'fa-receipt', color: 'text-cream' },
+              { label: 'Ready to pickup', value: orders.filter((o) => o.status === 'Ready').length, sub: 'Waiting for customer', icon: 'fa-bell', color: 'text-gold-primary' },
+              { label: "Today's orders", value: orders.length, sub: 'Total received', icon: 'fa-receipt', color: 'text-cream' },
             ].map((stat) => (
               <div key={stat.label} className="surface-glow rounded-[2rem] border border-white/10 bg-bg-surface/90 p-5 shadow-soft">
                 <div className="flex items-center justify-between gap-2">
@@ -185,7 +187,7 @@ export default function AdminDashboard() {
               </Link>
             </div>
             <div className="space-y-3">
-              {adminOrders
+              {orders
                 .filter((o) => o.status !== 'Ready')
                 .map((order) => (
                   <div key={order.id} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4">
@@ -202,7 +204,7 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 ))}
-              {adminOrders.filter((o) => o.status !== 'Ready').length === 0 && (
+              {orders.filter((o) => o.status !== 'Ready').length === 0 && (
                 <p className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-sm text-cream-muted">
                   All caught up! No pending orders.
                 </p>

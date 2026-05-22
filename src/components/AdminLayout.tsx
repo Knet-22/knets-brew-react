@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { NavLink, Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useOrders } from '../context/OrdersContext'
 import { getNotifications } from '../data/admin'
 import type { ReactNode } from 'react'
 
@@ -15,8 +16,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [readNotifications, setReadNotifications] = useState<string[]>([])
 
+  const { orders } = useOrders()
   // All hooks must run before any conditional return (Rules of Hooks)
-  const notifications = useMemo(() => user ? getNotifications(user.role) : [], [user])
+  const notifications = useMemo(() => user ? getNotifications(user.role, orders) : [], [user, orders])
 
   useEffect(() => {
     if (!user) return

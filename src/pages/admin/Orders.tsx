@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { adminOrders, type AdminOrder, type OrderStatus } from '../../data/admin'
+import { type AdminOrder, type OrderStatus } from '../../data/admin'
+import { useOrders } from '../../context/OrdersContext'
 import { useAuth } from '../../context/AuthContext'
 
 const STATUS_FLOW: OrderStatus[] = ['Confirmed', 'Preparing', 'Ready']
@@ -30,27 +31,25 @@ const ADVANCE_LABELS: Partial<Record<OrderStatus, string>> = {
 
 export default function AdminOrders() {
   const { user } = useAuth()
+  const { orders, updateOrderStatus } = useOrders()
   const isStaff = user?.role === 'staff'
 
-  // Local state for order statuses (staff can update these)
-  const [statuses, setStatuses] = useState<Record<string, OrderStatus>>(
-    () => Object.fromEntries(adminOrders.map((o) => [o.id, o.status])),
-  )
-  const [selectedId, setSelectedId] = useState<string | null>(adminOrders[0]?.id ?? null)
+  const [selectedId, setSelectedId] = useState<string | null>(orders[0]?.id ?? null)
 
-  const selectedOrder = adminOrders.find((o) => o.id === selectedId) ?? null
-  const selectedStatus = selectedId ? statuses[selectedId] : null
+  const selectedOrder = orders.find((o) => o.id === selectedId) ?? null
+  const selectedStatus = selectedOrder?.status ?? null
 
   const advanceStatus = (id: string) => {
-    const current = statuses[id]
-    const idx = STATUS_FLOW.indexOf(current)
+    const order = orders.find((o) => o.id === id)
+    if (!order) return
+    const idx = STATUS_FLOW.indexOf(order.status)
     if (idx < STATUS_FLOW.length - 1) {
-      setStatuses((prev) => ({ ...prev, [id]: STATUS_FLOW[idx + 1] }))
+      updateOrderStatus(id, STATUS_FLOW[idx + 1])
     }
   }
 
   const setStatus = (id: string, status: OrderStatus) => {
-    setStatuses((prev) => ({ ...prev, [id]: status }))
+    updateOrderStatus(id, status)
   }
 
   return (
@@ -83,8 +82,8 @@ export default function AdminOrders() {
         {/* Order list */}
         <div className="surface-glow rounded-[2rem] border border-white/10 bg-bg-surface/90 p-4 shadow-soft sm:p-6">
           <div className="space-y-3">
-            {adminOrders.map((order) => {
-              const status = statuses[order.id]
+            {orders.map((order) => {
+              const status = order.status
               const isSelected = selectedId === order.id
               return (
                 <button
