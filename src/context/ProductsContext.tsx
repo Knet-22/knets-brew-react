@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { products as defaultProducts, type Product } from '../data/products'
 
-const STORAGE_KEY = 'knets_brew_products_v1'
+const STORAGE_KEY = 'knets_brew_products_v2'
 
 interface ProductsContextValue {
   products: Product[]
