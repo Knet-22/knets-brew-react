@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext'
 
 const DEFAULT_STAFF = [
-  { id: 'default-staff', username: 'staff@knets.ph', name: 'Default Staff', isDefault: true },
+  { id: 'default-staff', username: 'jai', name: 'Staff', isDefault: true },
 ]
 
 export default function AdminStaff() {

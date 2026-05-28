@@ -70,14 +70,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     // Hardcoded admin
-    if (username === 'jireh' && password === 'faith') {
+    if (username === 'jireh@gmail.com' && password === 'faith') {
       const newUser: AdminUser = { id: '1', username, name: 'Admin', role: 'admin' }
       setUser(newUser)
       localStorage.setItem(SESSION_KEY, JSON.stringify(newUser))
       return true
     }
     // Hardcoded default staff
-    if (username === 'staff@knets.ph' && password === 'staff123') {
+    if (username === 'jai' && password === '212121') {
       const newUser: AdminUser = { id: '2', username, name: 'Staff', role: 'staff' }
       setUser(newUser)
       localStorage.setItem(SESSION_KEY, JSON.stringify(newUser))
